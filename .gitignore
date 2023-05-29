@@ -1,0 +1,7 @@
+private.pem
+public.pem
+config.py
+env/
+database.db
+__pycache__/
+.vscode/

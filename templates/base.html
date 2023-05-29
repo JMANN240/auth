@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{% block head %}
+		<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" type="text/css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Auth</title>
+		{% endblock %}
+	</head>
+	<body>
+		<div class="popup-container">
+			{% with messages = get_flashed_messages(with_categories=true) %}
+				{% if messages %}
+					{% for category, message in messages %}
+						<div>
+							<p>{{message}}</p>
+						</div>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+		</div>
+		{% block body %}
+		<main>
+		</main>
+		{% endblock %}
+	</body>
+</html>
