@@ -137,8 +137,12 @@ def login():
 
 @app.route("/token", methods=['POST'])
 def token():
-	code = request.form['code']
-	user_id = code.split('.')[1]
+	refresh_token = request.form.get('refresh_token')
+	if refresh_token is not None:
+		user_id = refresh_token.split('|')[1]
+	code = request.form.get('code')
+	if code is not None:
+		user_id = code.split('.')[1]
 
 	body = json.dumps({
 		"access_token": f"Atza|{user_id}",
