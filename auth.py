@@ -45,12 +45,12 @@ def get_db():
 #     return access_token
 
 
-# def generate_authorization_code(client_id, redirect_url):
+# def generate_authorization_code(client_id, redirect_uri):
 #     authorization_code = f.encrypt(
 #         json.dumps(
 #             {
 #                 "client_id": client_id,
-#                 "redirect_url": redirect_url,
+#                 "redirect_uri": redirect_uri,
 #             }
 #         ).encode()
 #     )
@@ -63,23 +63,23 @@ def get_db():
 
 #     authorization_codes[authorization_code] = {
 #         "client_id": client_id,
-#         "redirect_url": redirect_url,
+#         "redirect_uri": redirect_uri,
 #         "exp": expiration_date,
 #     }
 
 #     return authorization_code
 
 
-# def verify_authorization_code(authorization_code, client_id, redirect_url):
+# def verify_authorization_code(authorization_code, client_id, redirect_uri):
 #     record = authorization_codes.get(authorization_code)
 #     if not record:
 #         return False
 
 #     client_id_in_record = record.get("client_id")
-#     redirect_url_in_record = record.get("redirect_url")
+#     redirect_uri_in_record = record.get("redirect_uri")
 #     exp = record.get("exp")
 
-#     if client_id != client_id_in_record or redirect_url != redirect_url_in_record:
+#     if client_id != client_id_in_record or redirect_uri != redirect_uri_in_record:
 #         return False
 
 #     if exp < time.time():
@@ -103,9 +103,9 @@ def index():
 def login():
 	if request.method == "GET":
 		client_id = request.args.get("client_id")
-		redirect_url = request.args.get("redirect_url")
+		redirect_uri = request.args.get("redirect_uri")
 		state = request.args.get("state")
-		return render_template("login.html", title="Login", client_id=client_id, redirect_url=redirect_url, state=state)
+		return render_template("login.html", title="Login", client_id=client_id, redirect_uri=redirect_uri, state=state)
 
 	elif request.method == "POST":
 		con, cur = get_db()
@@ -126,12 +126,12 @@ def login():
 			return redirect(url_for("login"))
 		
 		client_id = request.form.get('client_id')
-		redirect_url = request.form.get('redirect_url')
+		redirect_uri = request.form.get('redirect_uri')
 		state = request.form.get('state')
 
 		code = f"testcode.{user['id']}"
 
-		res = make_response(redirect(f"{redirect_url}?state={state}&code={code}"))
+		res = make_response(redirect(f"{redirect_uri}?state={state}&code={code}"))
 		return res
 
 
@@ -187,22 +187,22 @@ def register():
 # def auth():
 #     # Describe the access request of the client and ask user for approval
 #     client_id = request.args.get("client_id")
-#     redirect_url = request.args.get("redirect_url")
+#     redirect_uri = request.args.get("redirect_uri")
 
-#     if None in [client_id, redirect_url]:
+#     if None in [client_id, redirect_uri]:
 #         return json.dumps({"error": "invalid_request"}), 400
 
-#     if not verify_client_info(client_id, redirect_url):
+#     if not verify_client_info(client_id, redirect_uri):
 #         return json.dumps({"error": "invalid_client"})
 
 #     return render_template(
-#         "AC_grant_access.html", client_id=client_id, redirect_url=redirect_url
+#         "AC_grant_access.html", client_id=client_id, redirect_uri=redirect_uri
 #     )
 
 
-# def process_redirect_url(redirect_url, authorization_code):
+# def process_redirect_uri(redirect_uri, authorization_code):
 #     # Prepare the redirect URL
-#     url_parts = list(urlparse.urlparse(redirect_url))
+#     url_parts = list(urlparse.urlparse(redirect_uri))
 #     queries = dict(urlparse.parse_qsl(url_parts[4]))
 #     queries.update({"authorization_code": authorization_code})
 #     url_parts[4] = urlencode(queries)
@@ -216,20 +216,20 @@ def register():
 #     username = request.form.get("username")
 #     password = request.form.get("password")
 #     client_id = request.form.get("client_id")
-#     redirect_url = request.form.get("redirect_url")
+#     redirect_uri = request.form.get("redirect_uri")
 
-#     if None in [username, password, client_id, redirect_url]:
+#     if None in [username, password, client_id, redirect_uri]:
 #         return json.dumps({"error": "invalid_request"}), 400
 
-#     if not verify_client_info(client_id, redirect_url):
+#     if not verify_client_info(client_id, redirect_uri):
 #         return json.dumps({"error": "invalid_client"})
 
 #     if not authenticate_user_credentials(username, password):
 #         return json.dumps({"error": "access_denied"}), 401
 
-#     authorization_code = generate_authorization_code(client_id, redirect_url)
+#     authorization_code = generate_authorization_code(client_id, redirect_uri)
 
-#     url = process_redirect_url(redirect_url, authorization_code)
+#     url = process_redirect_uri(redirect_uri, authorization_code)
 
 #     return redirect(url, code=303)
 
@@ -240,15 +240,15 @@ def register():
 #     authorization_code = request.form.get("authorization_code")
 #     client_id = request.form.get("client_id")
 #     client_secret = request.form.get("client_secret")
-#     redirect_url = request.form.get("redirect_url")
+#     redirect_uri = request.form.get("redirect_uri")
 
-#     if None in [authorization_code, client_id, client_secret, redirect_url]:
+#     if None in [authorization_code, client_id, client_secret, redirect_uri]:
 #         return json.dumps({"error": "invalid_request"}), 400
 
 #     if not authenticate_client(client_id, client_secret):
 #         return json.dumps({"error": "invalid_client"}), 400
 
-#     if not verify_authorization_code(authorization_code, client_id, redirect_url):
+#     if not verify_authorization_code(authorization_code, client_id, redirect_uri):
 #         return json.dumps({"error": "access_denied"}), 400
 
 #     access_token = generate_access_token()
