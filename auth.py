@@ -139,6 +139,18 @@ def login():
 def token():
 	code = request.form['code']
 	user_id = code.split('.')[1]
+
+	body = json.dumps({
+		"access_token": f"Atza|{user_id}",
+		"token_type": "bearer",
+		"expires_in": 3600,
+		"refresh_token": f"Atzr|{user_id}"
+	})
+	res = make_response(body)
+	res.headers['Content-Type'] = 'application/json; charset UTF-8'
+	res.headers['Cache-Control'] = 'no-store'
+	res.headers['Pragma'] = 'no-cache'
+
 	return user_id
 
 
