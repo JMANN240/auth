@@ -151,7 +151,7 @@ def token():
 	res.headers['Cache-Control'] = 'no-store'
 	res.headers['Pragma'] = 'no-cache'
 
-	return user_id
+	return res
 
 
 @app.route("/register", methods=["GET", "POST"])
